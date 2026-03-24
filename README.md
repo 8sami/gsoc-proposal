@@ -75,15 +75,15 @@
     </a>
 
     **Proof of Concept:**
-    To support my claims and get hands on experience, I developed a working prototype of the IM Wrapper as a django plugin using the [django plugin cookiecutter template](https://github.com/ohcnetwork/care-plugin-cookiecutter).
+    To support my claims and get hands on experience, I developed a working prototype of the IM Wrapper as a django plugin using the [django plugin cookiecutter template](https://github.com/ohcnetwork/care-plugin-cookiecutter) with the help of AI.
 
     My plan was to architect it as an IM provider which could be extended to support any messaging app. Since it's a proof of concept, there are many things that could have been done better and many things are intentionally kept simple, but I believe it is somewhat successful in properly conveying my ideas.
     
     Below is the list of things I focused on implementing for the POC:
 
-    * I have implemented the two step auth, in which the first step verifies the requestor's phone number with the number associated with a patient or staff member in the database. The second step asks for DOB to confirm identity. If the requestor fails to provide correct DOB within 3 attempts, all requests from that number are blocked for 15 minutes.
+    * Implemented the two step auth, in which the first step verifies the requestor's phone number with the number associated with a patient or staff member in the database. The second step asks for DOB to confirm identity. If the requestor fails to provide correct DOB within 3 attempts, all requests from that number are blocked for 15 minutes.
     * Proper state management is implemented so that the 'bot' is fool-proof and somewhat context-aware.
-    * Configurable caching is also implemented. 
+    * Configurable TTL caching is also implemented. 
     * The plugin is using care.audit_log package to log all the events to comply with HIPAA security regulations.
     * Fetches live data instead of place holder dummy data.
     * Data sanitization is also implemented to prevent sending irrelevant sensitive information that could put PII of patients at risk.
@@ -95,9 +95,15 @@
 
 
     **Additional Information:**
-    * setup scripts
-    * docs
-    * and questions here
+    * During the development of POC, I created [im_wrapper_setup.sh](im_wrapper_setup.sh) script to help automate the setup and running of the development environment.
+
+        The script [im_wrapper_setup.sh](im_wrapper_setup.sh) pulls the latest changes from origin develop, rebuilds containers, loads fixtures, logins as admin and creates a service account, generates service account token, creates a read only role and assigns it to the service account, gets all organizations and assigns the service account to them then updates the service account token and username in `plug_config.py`.
+    * I have also put together [plugin_setup.md](plugin_setup.md) to help guide with the setup of the POC plugin.
+    * A few thoughts I had during the development of POC:
+        * I wonder if the IM Wrapper plugin will also need a frontend implementation (just like [scribe_fe](https://github.com/ohcnetwork/care_scribe_fe)) to support view once links and for providing user with the ability to download PDFs of invoices and medications, as sending these PDFs via whatsapp might not be a good idea.
+        * We will surely need a frontend implementation to be able to send notifications and alerts to patients and staff members.
+        * Since each encounter (visit) can have different medications and service requests etc each, it would make more sense to prompt user to select an encounter when they message the plugin for, let's say, medications (if a patient has multiple encounters).
+        * I was also thinking of implementing a one-time otp verification, just to be extra careful, but since we will be matching the requestor's phone number against the db and the requestor will already have access to the phone number, I think it will just be an additional cost.
 
     **Use Cases**:
     1. Since care provides teleICU services to many remote areas of India, it makes a lot of sense to provide ease of access to medical data to the people living in those areas where issues like internet connectivity, digial literacy and lack of access to computers are prevalent.
@@ -125,7 +131,7 @@
 
 #### Summary About Me
 
-A short intro video: [Watch on YouTube](https://youtube.com/shorts/5Gx_Yw9gSZU?si=rSZAJvbkG9n7dxrv)
+A short intro of me: [Watch on YouTube](https://youtube.com/shorts/5Gx_Yw9gSZU?si=rSZAJvbkG9n7dxrv) :)
 
  I am a curious person. I like trying out new stuff and I mostly do things that seem fun to me. Problem solving and product development are one of those things that I very much enjoy doing. I have more than a YOE working as a software developer in an Australian agency where I resigned from in february to explore my interests and focus on my studies to try and get into MIT. I started programming when I was in 9th grade, as it seemed really interesting, and its just as fun now as it was back then.
 
@@ -151,4 +157,4 @@ A short intro video: [Watch on YouTube](https://youtube.com/shorts/5Gx_Yw9gSZU?s
   1. <https://github.com/ohcnetwork/care_fe/issues/15719>
   2. <https://github.com/ohcnetwork/care_fe/issues/15494>
 
-* I am not sure if I should mention this, but I honestly really love guiding and helping other people out in the community :D
+* I am not sure if I should mention this, but I lowkenuinely really love guiding and helping other people out in the community :D

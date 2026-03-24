@@ -1,43 +1,75 @@
-# Plugin Setup Guide
+# POC Plugin Setup Guide
 
 ## Prerequisites
 
 - Care running locally via Docker Compose (`make up`)
-- Your plugin repo cloned somewhere on your machine
 - Python 3.10+
 
 ---
 
-## 1. Clone the plugin
+## 1. Clone the plugin inside care at the same level as `manage.py`
 
 ```bash
-git clone https://github.com/<your-username>/{{ cookiecutter.plugin_slug }}.git
-cd {{ cookiecutter.plugin_slug }}
+git clone git@github.com:8sami/im_wrapper_poc.git
+cd im_wrapper_poc
 ```
 
 ## 2. Connect the Plugin to Care (Docker Setup)
 
-### Step 1 — Create `plug_config.py` in your Care repo
+### Step 1. Create `plug_config.py` in your Care repo
 
 In the root of the `care` repository, create a file called `plug_config.py`:
 
 ```python
 from plugs.manager import PlugManager
 from plugs.plug import Plug
+import os
 
-{{ cookiecutter.plugin_slug }} = Plug(
-    name="{{ cookiecutter.plugin_slug }}",
-    package_name="git+https://github.com/<your-username>/{{ cookiecutter.plugin_slug }}.git",
-    # for local development use "./{{ cookiecutter.plugin_slug }}"
-    # assuming that the plugin is cloned in care at the same level as manage.py
-    version="@main",  # or a specific tag like @v0.1.0 or "" for local
-    configs={
-        # Add any plugin config variables here
-        # "MY_CONFIG_KEY": "value",
-    },
+IM_WRAPPER_CONFIG = {
+    # WhatsApp Business API
+    "WHATSAPP_API_URL": 'https://graph.facebook.com/v18.0',
+    "WHATSAPP_PHONE_NUMBER_ID": 'insert_whatsapp_phone_number_id_here',
+    "WHATSAPP_ACCESS_TOKEN": 'insert_whatsapp_temporary_or_system_access_token_here',
+
+    # Cache
+    "IM_WRAPPER_CACHE_REDIS_URL": 'redis://redis:6379/1',
+    "IM_WRAPPER_BASE_URL": 'http://backend:9000',
+
+    # Security
+    "IM_WRAPPER_ENABLE_PII_SANITIZATION": True,
+    "IM_WRAPPER_ENABLE_AUDIT_LOGGING": True,
+
+    # Rate Limiting
+    "IM_WRAPPER_RATE_LIMIT_PER_PHONE": 20,
+    "IM_WRAPPER_RATE_LIMIT_PER_IP": 100,
+    "IM_WRAPPER_MAX_AUTH_ATTEMPTS": 3,
+    "IM_WRAPPER_AUTH_LOCKOUT_DURATION": 15,
+
+    # Service Account: Generate via admin and set via environment variable
+    # Required permissions: can_list_patients, can_view_clinical_data, can_read_encounter, can_list_encounter
+
+    # or let the setup script set these up for you automatically
+    "IM_WRAPPER_SERVICE_ACCOUNT_TOKEN": 'insert_service_account_token_here',
+    "IM_WRAPPER_SERVICE_ACCOUNT_USERNAME": 'insert_service_account_username_here',
+
+    # Cache TTLs (seconds)
+    "IM_WRAPPER_TTL_RECORDS": 600,
+    "IM_WRAPPER_TTL_MEDICATIONS": 300,
+    "IM_WRAPPER_TTL_PROCEDURES": 600,
+
+    # Development
+    "IM_WRAPPER_TEST_MODE": False,
+    "IM_WRAPPER_DEBUG": False,
+}
+
+im_wrapper_poc = Plug(
+    name="im_wrapper_poc",
+    package_name="./im_wrapper_poc", # assuming that you have cloned this repo inside care at root level
+    version="",  # Empty for local development
+    configs=IM_WRAPPER_CONFIG,
 )
 
-plugs = [{{ cookiecutter.plugin_slug }}]
+plugs = [im_wrapper_poc]
 manager = PlugManager(plugs)
 ```
 
@@ -49,64 +81,18 @@ subprocess.check_call(
 )
 ```
 
-### Step 2 — Test Installation and Rebuild Care
-
-```bash
-python install_plugins.py
-```
-
-if the above command installs the plugin successfully, run:
+### Step 2. Rebuild Care
 
 ```bash
 make re-build up
 ```
 
-Care will install the plugin during image build. Your plugin's URLs will be available at `/api/{{ cookiecutter.plugin_slug }}/`.
+Care will install the plugin during image build. Your plugin's URLs will be available at `/api/im_wrapper_poc/`.
 
-Making a GET request to `/api/{{ cookiecutter.plugin_slug }}/hello` after login should return:
+Making a GET request to `/api/im_wrapper_poc/hello` should return:
 
 ```json
 {
-    "message": "Hello from {{ cookiecutter.plugin_slug }}"
+    "message": "Hello from im_wrapper_poc"
 }
 ```
-
----
-
-## 3. Apply Migrations
-
-Every time you add or modify models in your plugin:
-
-```bash
-docker compose exec care python manage.py makemigrations {{ cookiecutter.plugin_slug }}
-docker compose exec care python manage.py migrate
-```
-
----
-
-## 4. Run Tests
-
-```bash
-# From the Care repo root
-make test
-```
-
-To run only your plugin's tests:
-
-```bash
-docker compose exec care python manage.py test {{ cookiecutter.plugin_slug }}
-```
-
----
-
-## 5. Iterate
-
-| Action | Command |
-| --- | --- |
-| Start Care | `make up` |
-| Stop Care | `make down` |
-| Rebuild Care | `make re-build up` |
-| View logs | `docker compose logs -f care` |
-| Open shell | `docker compose exec care bash` |
-| Load fixtures | `make load-fixtures` |
-| Run migrations | `docker compose exec care python manage.py migrate` |
