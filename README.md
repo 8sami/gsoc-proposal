@@ -88,10 +88,16 @@
     * Fetches live data instead of place holder dummy data.
     * Data sanitization is also implemented to prevent sending irrelevant sensitive information that could put PII of patients at risk.
 
-    Below are the links to the Github repo and a YouTube video of the POC:
+    Below are the links to the Github repo and a YouTube video demonstration of the POC:
 
     * **Github repo**: [https://github.com/8sami/im-wrapper](https://github.com/8sami/im-wrapper)
     * **YouTube video**: [https://www.youtube.com/watch?v=wKRil3z-d5s](https://www.youtube.com/watch?v=wKRil3z-d5s)
+
+
+    **Additional Information:**
+    * setup scripts
+    * docs
+    * and questions here
 
     **Use Cases**:
     1. Since care provides teleICU services to many remote areas of India, it makes a lot of sense to provide ease of access to medical data to the people living in those areas where issues like internet connectivity, digial literacy and lack of access to computers are prevalent.
@@ -110,7 +116,7 @@
 * My technical skills include Python, Javascript, Typescript, React, Nextjs, Django, Flask, SQL, Git, Github, Docker, Linux
 * My first full stack project, "Simple Invoice Generator" was built using Django, weasyprint, crispy-bootstrap5 and jinja. That project recorded almost 2 Cr of transactions for a procurement service provider and then as I was developing its v2 using nextjs, shadcn, reactPDF and django ninja the business completed its tenure. I reviewed the code a few weeks ago... it needs a lot of work but I plan to deploy it as a free open source tool this year.
 
-    I have a YOE working as a software dev remotely for an Australian agency where I got the chance to work on production grade code across various projects using different technologies and working in a high stakes environment has taught me a lot about problem solving while respecting the tight deadlines.
+    I have a YOE working as a software dev remotely for an Australian agency where I got the chance to work on production grade code across various projects using different technologies. Working in a high stakes environment has taught me a lot about problem solving while respecting tight deadlines.
 
 #### Implementation Timeline and Milestones
 
@@ -119,7 +125,9 @@
 
 #### Summary About Me
 
- I am a curious person. I mostly do things that seem fun to me and problem solving and product development are one of those things that i very much enjoy doing. I have more than a YOE working as a software developer in an Australian agency where I resigned from in february to explore my interests and focus on my studies to try get into MIT. I started programming when I was in 9th grade as it seemed interesting and its just as fun now as it was back then.
+A short intro video: [Watch on YouTube](https://youtube.com/shorts/5Gx_Yw9gSZU?si=rSZAJvbkG9n7dxrv)
+
+ I am a curious person. I like trying out new stuff and I mostly do things that seem fun to me. Problem solving and product development are one of those things that I very much enjoy doing. I have more than a YOE working as a software developer in an Australian agency where I resigned from in february to explore my interests and focus on my studies to try and get into MIT. I started programming when I was in 9th grade, as it seemed really interesting, and its just as fun now as it was back then.
 
  My motivation for winning gsoc is that it aligns with my goals, and I have also developed a love for open source in the process. I genuinely enjoy contributing to something bigger than me, something that would go on to live and make people's lives easier even after me.
 
@@ -130,9 +138,17 @@
 
 #### Contribution to OHC Repo (if applicable)
 
-1. <https://github.com/ohcnetwork/care_fe/pull/16086>
-2. <https://github.com/ohcnetwork/care_fe/pull/16085>
-3. <https://github.com/ohcnetwork/care_fe/pull/15828>
-4. <https://github.com/ohcnetwork/care_fe/pull/15546>
-5. <https://github.com/ohcnetwork/care_fe/pull/15454>
-6. <https://github.com/ohcnetwork/care_fe/pull/15098>
+* **Pull Requests**:
+  1. <https://github.com/ohcnetwork/care_fe/pull/16144>
+  2. <https://github.com/ohcnetwork/care_fe/pull/16086>
+  3. <https://github.com/ohcnetwork/care_fe/pull/16085>
+  4. <https://github.com/ohcnetwork/care_fe/pull/15828>
+  5. <https://github.com/ohcnetwork/care_fe/pull/15546>
+  6. <https://github.com/ohcnetwork/care_fe/pull/15454>
+  7. <https://github.com/ohcnetwork/care_fe/pull/15098>
+
+* **Issues**: 
+  1. <https://github.com/ohcnetwork/care_fe/issues/15719>
+  2. <https://github.com/ohcnetwork/care_fe/issues/15494>
+
+* I am not sure if I should mention this, but I honestly really love guiding and helping other people out in the community :D
