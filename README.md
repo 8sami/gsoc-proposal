@@ -45,11 +45,11 @@
 
 #### Project Proposal
 
-* **Title**: Whatsapp bot for Care
+* **Title**: IM Wrapper Plugin For Care (with POC)
 * **Project Overview**:
     IM wrapper is a django plugin based instant messaging provider meant to provide staff and patients ease of access to medical data through any messaging app, quickly and securely. Additionally, it also aims to add functionality of sending alerts and notifications via the configured messaging providers.
 
-    Although the Care web app already provides all the information, but people such as those living in rural/remote areas could greatly benefit from accessing their medical records and appointments through a simple message on WhatsApp instead of having to navigate a web app which could prove difficult for people with limited digital exposure.
+    Although the Care web app already provides all the information, people such as those living in rural/remote areas could greatly benefit from accessing their medical records and appointments through a simple message on WhatsApp instead of having to navigate a web app which could prove difficult for people with limited digital exposure.
 
     The provider approach makes the instant messaging functionality independent of any messaging app, ensuring each one's support can be developed, maintained and tested without interfering with other messaging provider's implementation.
 
@@ -58,7 +58,7 @@
     **Specification:**
     1. **Architecture**: Plugin based, using the [django plugin cookiecutter template](https://github.com/ohcnetwork/care-plugin-cookiecutter). Provider agnostic approach so that the plugin could support multiple messaging providers.
     2. **Authentication**: Two step authentication; first step is matching the requestor's phone number with the number associated with a patient or staff member in the database. The second step is asking for DOB to confirm identity. If the requestor fails to provide correct DOB within 3 attempts, the request is blocked for 15 minutes.
-    3. **Authorization**: The authorization is managed via the type of account (staff, patient etc) and roles permissions (RBAC) logic in the Care backend. For example a patient can only access their own data, while staff can access the data of patients.
+    3. **Authorization**: The authorization is managed via the type of account (staff, patient etc) and roles and permissions (RBAC) logic in the Care backend. For example a patient can only access their own data, while staff can access the data of patients.
     4. **Caching**: Implemented using Redis through django-redis to reduce latency and database load, with configurable TTL.
     5. **Rate Limiting**: Rate limiting and debouncing of message requests to prevent spam, abuse and overspending credits.
     6. **Error Handling**: Proper error handling following Care's implementation and guidelines.
@@ -75,9 +75,7 @@
     
     Below is the list of things I focused on implementing for the POC:
 
-    * Implemented the two step auth, in which the first step verifies the requestor's phone number with the number associated with a patient in the db. The second step asks for DOB to confirm identity. 
-    
-        If the requestor fails to provide correct DOB within 3 attempts, all requests from that number are blocked for 15 minutes.
+    * Implemented the two step auth, in which the first step verifies the requestor's phone number with the number associated with a patient in the db. The second step asks for DOB to confirm identity. If the requestor fails to provide correct DOB within 3 attempts, all requests from that number are blocked for 15 minutes.
     * Proper state management is implemented so that the 'bot' is fool-proof and somewhat context-aware.
     * Caching with configurable TTL is also implemented. 
     * The plugin is using care.audit_log package to log all the events to comply with HIPAA security regulations.
@@ -99,13 +97,13 @@
     * The word "WhatsApp" can be used interchangeably with any or all of the messaging apps/providers that could be integrated in the plugin in the future.
     * During the development of POC, I had AI create me [im_wrapper_setup.sh](https://github.com/8sami/gsoc-proposal/blob/main/media/im_wrapper_setup.sh) script to help automate the setup and running of the development environment (which had started to become annoying doing daily, manually).
 
-        The script [im_wrapper_setup.sh](https://github.com/8sami/gsoc-proposal/blob/main/media/im_wrapper_setup.sh) pulls the latest changes from origin develop, rebuilds containers, loads fixtures, logins as admin, creates a service account, generates service account token, creates a read only role and assigns it to the service account, gets all organizations and assigns the service account to them, then updates the service account token and username in plug_config.py and then starts up ngrok on port 9000.
+        The script [im_wrapper_setup.sh](https://github.com/8sami/gsoc-proposal/blob/main/media/im_wrapper_setup.sh) pulls the latest changes from origin develop, rebuilds containers, loads fixtures, logs in as admin, creates a service account, generates service account token, creates a read only role and assigns it to the service account, gets all organizations and assigns the service account to them, then updates the service account token and username in plug_config.py and then starts up ngrok on port 9000.
     * I have also put together [plugin_setup.md](https://github.com/8sami/gsoc-proposal/blob/main/media/plugin_setup.md) to help with the setup of the POC plugin.
     * A few thoughts I had during the development of POC:
         * "I wonder if the IM wrapper plugin will also need a frontend implementation (just like [scribe_fe](https://github.com/ohcnetwork/care_scribe_fe)) for providing users with the ability to download PDFs of invoices, medications etc, as sending these PDFs via WhatsApp might not be a good idea."
         * "We will surely need a frontend implementation to be able to send notifications and alerts to patients and staff or maybe we could add a staff-only option to allow them to do this using just the interactive menu of WhatsApp and other providers."
         * "Since each encounter (visit) can have different medications and service requests etc, will it make more sense to first prompt user to select an encounter when they message the plugin for, let's say, medications (if a patient has multiple encounters) or instead, just list out all the medications of all the encounters (as it currently does in the POC)?"
-        * "I was also thinking of implementing a one-time otp verification, just to be extra careful, but since we will be matching requestor's phone number against patients in the db and the requestor will already have access to that phone number; it will just be an additional unnecessary cost."
+        * I was also thinking of implementing an otp verification, just to be extra careful, but since we will be matching requestor's phone number against patients in the db and the requestor will already have access to that phone number; it will just be an additional unnecessary cost.
         * "What should ideally happen if a staff member is also registered as a patient using the same phone number?", I faced this scenario while testing the POC and wasn't sure how to handle it.
         * "I wonder what could be the best way to handle long messages, such as those exceeding 4,096 characters.", still haven't found an answer for this.
 
@@ -120,7 +118,7 @@
 
 * **Features**:
   1. I honestly really liked the plugin approach and it was my first time seeing something like that. It's so good at keeping the core project clean and makes it really easy to add new features without worrying about breaking existing implementations... I will surely be using this approach in my own projects.
-  2. It was my first time seeing the implementation of RBAC based roles and permission too and I sure learned a lot.
+  2. It was my first time seeing the implementation of RBAC based roles and permissions too and I sure learned a lot.
   3. The care_scribe plugin was so amazing too! I read its docs completely, word to word. I really liked that filling up forms by hand is a seemingly minor inconvenience but how it's saving doctors and nurses quite a lot of time.
   4. I have learned a lot contributing to the care_fe project and got to learn many new different things that I didn't know existed before, so I am really grateful to the core team for welcoming me and helping me whenever I bothered them :D
 
@@ -160,7 +158,7 @@ I propose a 3-phase approach for this 12 week, medium size project with the time
 2. Add audit logging using the care.audit_log package.
 
 * **Deliverable & Milestone 1**: 
-A functional backend plugin capable of serving patient and staff queries securely to authenticated users through Whatsapp.
+A functional backend plugin capable of serving patient and staff queries securely to authenticated users through WhatsApp.
 
 **Phase 2: Notifications & Frontend Plugin (Weeks 6–9)**
 
@@ -185,15 +183,15 @@ A functional backend plugin capable of serving patient and staff queries securel
 
 * **Deliverable & Milestone 2**: Fully integrated notification system and functionality to preview and download PDFs securely.
 
-**Week 10**:
+* **Week 10**:
 1. Buffer week for completing blocked, pending or additional tasks
 
-**Week 11**:
+* **Week 11**:
 1. Write proper tests for both backend and frontend
 2. Generate complete, accurate and comprehensive documentation using Swagger and Sphinx.
 3. Create deployments
 
-**Week 12**:
+* **Week 12**:
 1. Record demonstration videos
 2. Prepare guides for setting up and using the plugin. 
 3. Cleanup codebase
@@ -214,7 +212,7 @@ A functional backend plugin capable of serving patient and staff queries securel
 
 A short intro of me: [Watch on YouTube](https://youtube.com/shorts/5Gx_Yw9gSZU?si=rSZAJvbkG9n7dxrv) :)
 
- I am a curious person. I like trying out new stuff and doing things that seem fun to me. Problem solving and product development are one of those things that I very much enjoy doing. I have a year of experience working as a software developer in an Australian agency where I resigned from in February to explore my interests and focus on my studies to try and get into MIT. I started programming when I was in 9th grade, as it seemed really interesting and its just as fun now as it was back then.
+ I am a curious person. I like trying out new stuff and doing things that seem fun to me. Problem solving and product development are one of those things that I very much enjoy doing. I have a year of experience working as a software developer in an Australian agency where I resigned from in February to explore my interests and focus on my studies to try and get into MIT. I started programming when I was in 9th grade, as it seemed really interesting and it's just as fun now as it was back then.
 
  My motivation for winning gsoc is that it aligns with my goals and I have also developed a love for open source in the process. I genuinely enjoy contributing to something bigger than me, something that would go on to live and make people's lives easier even after me.
 
